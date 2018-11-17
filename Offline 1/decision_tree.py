@@ -65,11 +65,11 @@ class DecisionTree:
 
     def decision_tree_learning_depth(self, labels, attribute_indices, attribute_values, parent_labels, current_depth):
         df = pd.concat([attribute_values, labels], axis=1)
-        if labels is None:
+        if labels.size == 0:
             return Node(decision=parent_labels.value_counts().idxmax())
         elif len(labels.unique()) == 1:
             return Node(decision=labels.iloc[0])
-        elif attribute_indices is None:
+        elif len(attribute_indices) == 0:
             return Node(decision=labels.value_counts().idxmax())
         elif current_depth == self.depth:
             return Node(decision=labels.value_counts().idxmax())
