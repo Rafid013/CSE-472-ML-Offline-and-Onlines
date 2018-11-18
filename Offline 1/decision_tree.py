@@ -94,6 +94,8 @@ class DecisionTree:
         while True:
             current_attribute = attributes[current_node.attribute_no]
             branch = np.where(current_node.attribute_values == current_attribute)
+            if len(branch[0]) == 0:
+                return 0
             child = current_node.child_nodes[branch[0][0]]
             if child.decision == 0:
                 return 0
