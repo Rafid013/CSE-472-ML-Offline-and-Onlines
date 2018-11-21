@@ -5,7 +5,7 @@ from sklearn import metrics
 
 import adult_process as ap
 import decision_tree
-
+import adaboost
 
 start_preprocessing = time.time()
 df_adult_train = pd.read_csv('adult_data.csv', delimiter=',', header=None, na_values=' ?')
@@ -14,11 +14,14 @@ df_adult_train = ap.process_string_to_int_adult(df_adult_train)
 df_adult_train, binarizers_adult, binarizers_adult_columns = ap.binarize_adult(df_adult_train)
 end_preprocessing = time.time()
 
-print "Preprocessing on training data took " + str(float(end_preprocessing - start_preprocessing)/60) + " min"
+print "Preprocessing training data took " + str(float(end_preprocessing - start_preprocessing)/60) + " min"
 
 start_training = time.time()
-dt = decision_tree.DecisionTree(14)
-dt.decision_tree_learning(df_adult_train.iloc[:, 14], range(0, 14), df_adult_train.iloc[:, :14])
+# dt = decision_tree.DecisionTree(14)
+# dt.train(df_adult_train.iloc[:, 14], df_adult_train.iloc[:, :14])
+
+dt = adaboost.AdaBoost(df_adult_train, decision_tree.DecisionTree, 20)
+dt.train()
 end_training = time.time()
 
 print "Training took " + str(float(end_training - start_training)/60) + " min"

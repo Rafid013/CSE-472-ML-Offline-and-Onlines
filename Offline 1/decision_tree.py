@@ -86,20 +86,18 @@ class DecisionTree:
                 root.child_nodes.append(child_node)
             return root
 
-    def decision_tree_learning(self, labels, attribute_indices, attribute_values, parent_labels=None):
+    def train(self, labels, attribute_values, parent_labels=None):
+        attribute_indices = range(0, attribute_values.shape[1])
         self.root = self.decision_tree_learning_depth(labels, attribute_indices, attribute_values, parent_labels, 0)
 
     def decide(self, attributes):
         current_node = self.root
         while True:
-            current_attribute = attributes[current_node.attribute_no]
-            branch = np.where(current_node.attribute_values == current_attribute)
-            if len(branch[0]) == 0:
-                return 0
-            child = current_node.child_nodes[branch[0][0]]
-            if child.decision == 0:
-                return 0
-            elif child.decision == 1:
-                return 1
+            if current_node.decision is None:
+                current_attribute = attributes[current_node.attribute_no]
+                branch = np.where(current_node.attribute_values == current_attribute)
+                if len(branch[0]) == 0:
+                    return 0
+                current_node = current_node.child_nodes[branch[0][0]]
             else:
-                current_node = child
+                return current_node.decision
