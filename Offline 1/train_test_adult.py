@@ -51,6 +51,8 @@ dt.train(df_adult_train.iloc[:, df_adult_train.shape[1] - 1], df_adult_train.ilo
 end_training = time.time()
 
 print "Training took " + str(float(end_training - start_training)/60) + " min"
+print
+print
 
 results = []
 for smpl in range(0, df_adult_train.shape[0]):
@@ -134,6 +136,8 @@ else:
     f1s = 'undefined'
 
 
+print
+print
 print "Result on test data:"
 print "#############"
 print 'Accuracy = ' + str(acc)

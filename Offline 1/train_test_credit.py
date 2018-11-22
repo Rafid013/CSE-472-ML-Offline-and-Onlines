@@ -26,6 +26,8 @@ if prepro == 1:
     end_preprocessing = time.time()
     
     print "Preprocessing took " + str(float(end_preprocessing - start_preprocessing)/60) + " min"
+    print
+    print
 
 else:
     df_credit = pd.read_csv('Preprocessed_Credit.csv', delimiter=',', header=None)
@@ -41,6 +43,8 @@ dt.train(df_credit_train.iloc[:, df_credit.shape[1] - 1], df_credit_train.iloc[:
 end_training = time.time()
 
 print "Training took " + str(float(end_training - start_training)/60) + " min"
+print
+print
 
 results = []
 for smpl in range(0, df_credit_train.shape[0]):
@@ -124,7 +128,8 @@ if tpr != 'undefined' and prc != 'undefined':
 else:
     f1s = 'undefined'
 
-
+print
+print
 print "Result on test data:"
 print "#############"
 print 'Accuracy = ' + str(acc)

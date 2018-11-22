@@ -1,0 +1,177 @@
+Telco Normal Training:
+
+True positive = 1386
+True negative = 3945
+False positive = 197
+False positive = 106
+
+
+Result on training data:
+#############
+Accuracy = 0.946219382322
+True Positive Rate = 0.928954423592
+True Negative Rate = 0.952438435538
+Precision = 0.875552747947
+False Discovery Rate = 0.124447252053
+F1 Score = 0.901463414634
+#############
+
+
+
+True positive = 179
+True negative = 852
+False positive = 180
+False positive = 198
+
+
+Result on test data:
+#############
+Accuracy = 0.731724627395
+True Positive Rate = 0.474801061008
+True Negative Rate = 0.825581395349
+Precision = 0.49860724234
+False Discovery Rate = 0.50139275766
+F1 Score = 0.486413043478
+#############
+
+
+Telco Adaboost K = 5:
+
+True positive = 606
+True negative = 3865
+False positive = 283
+False positive = 880
+
+
+Result on training data:
+#############
+Accuracy = 0.793574724885
+True Positive Rate = 0.407806191117
+True Negative Rate = 0.931774349084
+Precision = 0.681664791901
+False Discovery Rate = 0.318335208099
+F1 Score = 0.510315789474
+#############
+
+
+
+True positive = 151
+True negative = 953
+False positive = 73
+False positive = 232
+
+
+Result on test data:
+#############
+Accuracy = 0.783534421576
+True Positive Rate = 0.394255874674
+True Negative Rate = 0.928849902534
+Precision = 0.674107142857
+False Discovery Rate = 0.325892857143
+F1 Score = 0.497528830313
+#############
+
+
+Telco Adaboost K = 10:
+
+True positive = 599
+True negative = 3862
+False positive = 292
+False positive = 881
+
+
+Result on training data:
+#############
+Accuracy = 0.791799787007
+True Positive Rate = 0.40472972973
+True Negative Rate = 0.929706307174
+Precision = 0.672278338945
+False Discovery Rate = 0.327721661055
+F1 Score = 0.505272037115
+#############
+
+
+
+True positive = 158
+True negative = 956
+False positive = 64
+False positive = 231
+
+
+Result on test data:
+#############
+Accuracy = 0.790631653655
+True Positive Rate = 0.40616966581
+True Negative Rate = 0.937254901961
+Precision = 0.711711711712
+False Discovery Rate = 0.288288288288
+F1 Score = 0.517184942717
+#############
+
+
+Telco Adaboost K = 15:
+
+True positive = 755
+True negative = 3764
+False positive = 381
+False positive = 734
+
+
+Result on training data:
+#############
+Accuracy = 0.802094426695
+True Positive Rate = 0.507051712559
+True Negative Rate = 0.908082026538
+Precision = 0.664612676056
+False Discovery Rate = 0.335387323944
+F1 Score = 0.575238095238
+#############
+
+
+
+True positive = 180
+True negative = 936
+False positive = 93
+False positive = 200
+
+
+Result on test data:
+#############
+Accuracy = 0.792051100071
+True Positive Rate = 0.473684210526
+True Negative Rate = 0.909620991254
+Precision = 0.659340659341
+False Discovery Rate = 0.340659340659
+F1 Score = 0.551301684533
+#############
+
+
+Telco Adaboost K = 20:
+
+Result on training data:
+#############
+Accuracy = 0.80795172169
+True Positive Rate = 0.548108825481
+True Negative Rate = 0.902834989096
+Precision = 0.673186634067
+False Discovery Rate = 0.326813365933
+F1 Score = 0.604242867593
+#############
+
+
+
+True positive = 179
+True negative = 942
+False positive = 105
+False positive = 183
+
+
+Result on test data:
+#############
+Accuracy = 0.795599716111
+True Positive Rate = 0.494475138122
+True Negative Rate = 0.899713467049
+Precision = 0.630281690141
+False Discovery Rate = 0.369718309859
+F1 Score = 0.554179566563
+#############
