@@ -64,6 +64,7 @@ class DecisionTree:
         return attribute_indices[max_gini_index]
 
     def decision_tree_learning_depth(self, labels, attribute_indices, attribute_values, parent_labels, current_depth):
+        print 'Current depth ' + str(current_depth)
         df = pd.concat([attribute_values, labels], axis=1)
         if labels.size == 0:
             return Node(decision=parent_labels.value_counts().idxmax())

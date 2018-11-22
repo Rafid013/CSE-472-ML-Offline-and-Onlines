@@ -2,19 +2,25 @@ import time
 
 import pandas as pd
 from sklearn import metrics, model_selection
-import creditcard_process as cp
+import preprocess as cp
 import decision_tree
 import adaboost
 
 
 start_preprocessing = time.time()
+print 'Preprocessing started...'
 df_credit_temp = pd.read_csv('creditcard.csv', delimiter=',', header=None, na_values='\s+', skiprows=1)
 df_credit_pos = df_credit_temp.loc[df_credit_temp.iloc[:, 30] == 1]
 df_credit_neg = df_credit_temp.loc[df_credit_temp.iloc[:, 30] == 0]
 df_credit_neg = df_credit_neg.sample(n=20000, replace=False)
 df_credit = pd.concat([df_credit_neg, df_credit_pos], axis=0)
-df_credit = cp.process_missing_attribute_credit(df_credit)
-df_credit, binarizers_credit, binarizers_credit_columns = cp.binarize_credit(df_credit)
+df_credit = cp.process_missing_label(df_credit)
+df_credit = cp.process_missing_attribute(df_credit, range(0, 30))
+print 'Missing values handled'
+df_credit, binarizers_credit, binarizers_credit_columns = cp.binarize(df_credit, range(0, 30))
+print 'Continuous values binarized'
+df_credit.to_csv('Preprocessed_Credit.csv', sep=',')
+print 'Preprocessing Finished...'
 end_preprocessing = time.time()
 
 

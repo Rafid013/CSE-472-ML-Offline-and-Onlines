@@ -3,15 +3,21 @@ import time
 import pandas as pd
 from sklearn import metrics
 
-import adult_process as ap
+import preprocess as ap
 import decision_tree
 import adaboost
 
 start_preprocessing = time.time()
+print 'Preprocessing started...'
 df_adult_train = pd.read_csv('adult_data.csv', delimiter=',', header=None, na_values=' ?')
-df_adult_train = ap.process_missing_attribute_adult(df_adult_train)
-df_adult_train = ap.process_string_to_int_adult(df_adult_train)
-df_adult_train, binarizers_adult, binarizers_adult_columns = ap.binarize_adult(df_adult_train)
+df_adult_train = ap.process_missing_label(df_adult_train)
+df_adult_train = ap.process_missing_attribute(df_adult_train, [1, 3, 5, 6, 7, 8, 9, 13])
+print 'Missing values handled'
+df_adult_train = ap.process_string_to_int(df_adult_train, [1, 3, 5, 6, 7, 8, 9, 13, 14])
+print 'String converted to integer labels'
+df_adult_train, binarizers_adult, binarizers_adult_columns = ap.binarize(df_adult_train, [0, 2, 4, 10, 11, 12])
+print 'Continuous values binarized'
+df_adult_train.to_csv('Preprocessed_Adult.csv', sep=',')
 end_preprocessing = time.time()
 
 print "Preprocessing training data took " + str(float(end_preprocessing - start_preprocessing)/60) + " min"
@@ -77,9 +83,10 @@ print
 
 start_preprocessing = time.time()
 df_adult_test = pd.read_csv('adult_test.csv', delimiter=',', header=None, na_values=' ?')
-df_adult_test = ap.process_missing_attribute_adult(df_adult_test)
-df_adult_test = ap.process_string_to_int_adult(df_adult_test)
-df_adult_test = ap.binarize_adult_test(binarizers_adult, binarizers_adult_columns, df_adult_test)
+df_adult_test = ap.process_missing_label(df_adult_test)
+df_adult_test = ap.process_missing_attribute(df_adult_test, [1, 3, 5, 6, 7, 8, 9, 13])
+df_adult_test = ap.process_string_to_int(df_adult_test, [1, 3, 5, 6, 7, 8, 9, 13, 14])
+df_adult_test = ap.binarize_test(binarizers_adult, binarizers_adult_columns, df_adult_test)
 end_preprocessing = time.time()
 
 print "Preprocessing on test data took " + str(float(end_preprocessing - start_preprocessing)/60) + " min"
