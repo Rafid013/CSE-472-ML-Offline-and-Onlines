@@ -64,7 +64,6 @@ class DecisionTree:
         return attribute_indices[max_gini_index]
 
     def decision_tree_learning_depth(self, labels, attribute_indices, attribute_values, parent_labels, current_depth):
-        print 'Current depth ' + str(current_depth)
         df = pd.concat([attribute_values, labels], axis=1)
         if labels.size == 0:
             return Node(decision=parent_labels.value_counts().idxmax())
@@ -80,8 +79,9 @@ class DecisionTree:
             root = Node(a, attribute_values.iloc[:, a].unique(), [])
             for vk in attribute_values.iloc[:, a].unique():
                 df_vk = df.loc[df.iloc[:, a] == vk]
+                attribute_indices_copy = attribute_indices[:]
                 child_node = self.decision_tree_learning_depth(df_vk.iloc[:, df_vk.shape[1] - 1],
-                                                               attribute_indices, df_vk.iloc[:, :df_vk.shape[1] - 1],
+                                                               attribute_indices_copy, df_vk.iloc[:, :df_vk.shape[1] - 1],
                                                                labels,
                                                                current_depth + 1)
                 root.child_nodes.append(child_node)
