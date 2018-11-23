@@ -6,7 +6,7 @@ import preprocess as cp
 import decision_tree
 import adaboost
 
-prepro = 1
+prepro = 0
 if prepro == 1:
     start_preprocessing = time.time()
     print 'Preprocessing started...'
@@ -35,11 +35,11 @@ else:
 df_credit_train, df_credit_test = model_selection.train_test_split(df_credit, test_size=0.20)
 
 start_training = time.time()
-dt = decision_tree.DecisionTree(df_credit.shape[1] - 1)
-dt.train(df_credit_train.iloc[:, df_credit.shape[1] - 1], df_credit_train.iloc[:, :df_credit.shape[1] - 1])
+# dt = decision_tree.DecisionTree(df_credit.shape[1] - 1)
+# dt.train(df_credit_train.iloc[:, df_credit.shape[1] - 1], df_credit_train.iloc[:, :df_credit.shape[1] - 1])
 
-# dt = adaboost.AdaBoost(df_credit_train, decision_tree.DecisionTree, 20)
-# dt.train()
+dt = adaboost.AdaBoost(df_credit_train, decision_tree.DecisionTree, 20)
+dt.train()
 end_training = time.time()
 
 print "Training took " + str(float(end_training - start_training)/60) + " min"
@@ -51,6 +51,11 @@ for smpl in range(0, df_credit_train.shape[0]):
     results.append(dt.decide(df_credit_train.iloc[smpl, :df_credit.shape[1] - 1].tolist()))
 
 tn, fp, fn, tp = metrics.confusion_matrix(df_credit_train.iloc[:, df_credit.shape[1] - 1].tolist(), results).ravel()
+
+print 'True positive = ' + str(tp)
+print 'True negative = ' + str(tn)
+print 'False positive = ' + str(fp)
+print 'False positive = ' + str(fn)
 
 total = tn + fp + fn + tp
 
@@ -100,7 +105,11 @@ for smpl in range(0, df_credit_test.shape[0]):
     results.append(dt.decide(df_credit_test.iloc[smpl, :df_credit.shape[1] - 1].tolist()))
 
 tn, fp, fn, tp = metrics.confusion_matrix(df_credit_test.iloc[:, df_credit.shape[1] - 1].tolist(), results).ravel()
-print tn, fp, fn, tp
+
+print 'True positive = ' + str(tp)
+print 'True negative = ' + str(tn)
+print 'False positive = ' + str(fp)
+print 'False positive = ' + str(fn)
 
 total = tn + fp + fn + tp
 

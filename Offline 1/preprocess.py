@@ -3,14 +3,6 @@ import numpy as np
 from sklearn import preprocessing
 
 
-def count_value(series, val):
-    cnt = 0
-    for s in series:
-        if s == val:
-            cnt += 1
-    return cnt
-
-
 def process_missing_attribute(dataframe, discrete_indices):
     df = dataframe.copy()
     for j in range(0, df.shape[1] - 1):
@@ -50,6 +42,7 @@ def binarize(dataframe, indices):
     binarizers = []
     binarizer_columns = []
     for i in indices:
+        print 'Binarizing column ' + str(i)
         df = df.sort_values(by=[i], axis=0, kind='mergesort')
         unique_values = df.iloc[:, i].unique()
         mid_points = [unique_values[0] - 5]
@@ -57,8 +50,8 @@ def binarize(dataframe, indices):
             mid_points.append(float(unique_values[k] + unique_values[k + 1]) / 2.0)
         mid_points.append(unique_values[len(unique_values) - 1] + 5)
 
-        pos_count = count_value(df.iloc[:, df.shape[1] - 1], 1)
-        neg_count = count_value(df.iloc[:, df.shape[1] - 1], 0)
+        pos_count = df[df.iloc[:, df.shape[1] - 1] == 1].shape[0]
+        neg_count = df.shape[0] - pos_count
 
         entropy_total = 0
         if pos_count != 0:
@@ -69,18 +62,12 @@ def binarize(dataframe, indices):
                 float(neg_count) / (pos_count + neg_count), 2)
 
         info_gain = []
-        for k in range(0, len(mid_points)):
-            mid_point = mid_points[k]
-            pos_count_before = neg_count_before = pos_count_after = neg_count_after = 0
-            for j in range(0, df.shape[0]):
-                if df.iloc[j, i] <= mid_point:
-                    if df.iloc[j, df.shape[1] - 1] == 1:
-                        pos_count_before += 1
-                    else:
-                        neg_count_before += 1
-                else:
-                    pos_count_after = pos_count - pos_count_before
-                    neg_count_after = neg_count - neg_count_before
+        for mid_point in mid_points:
+            points_before = df[(df.iloc[:, i] <= mid_point)]
+            pos_count_before = points_before[points_before.iloc[:, points_before.shape[1] - 1] == 1].shape[0]
+            neg_count_before = points_before.shape[0] - pos_count_before
+            pos_count_after = pos_count - pos_count_before
+            neg_count_after = neg_count - neg_count_before
 
             entropy_before = entropy_after = 0
             if pos_count_before + neg_count_before > 0:

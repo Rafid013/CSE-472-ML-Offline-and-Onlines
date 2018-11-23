@@ -1,0 +1,183 @@
+Credit Normal Training:
+
+True positive = 352
+True negative = 15996
+False positive = 3
+False positive = 42
+
+
+Result on training data:
+#############
+Accuracy = 0.997254925883
+True Positive Rate = 0.893401015228
+True Negative Rate = 0.999812488281
+Precision = 0.991549295775
+False Discovery Rate = 0.00845070422535
+F1 Score = 0.939919893191
+#############
+
+
+
+True positive = 79
+True negative = 3997
+False positive = 4
+False positive = 19
+
+
+Result on test data:
+#############
+Accuracy = 0.994388875335
+True Positive Rate = 0.80612244898
+True Negative Rate = 0.999000249938
+Precision = 0.951807228916
+False Discovery Rate = 0.0481927710843
+F1 Score = 0.872928176796
+#############
+
+
+Credit Adaboost 5:
+
+True positive = 318
+True negative = 15954
+False positive = 35
+False positive = 86
+
+
+Result on training data:
+#############
+Accuracy = 0.992618800708
+True Positive Rate = 0.787128712871
+True Negative Rate = 0.997810995059
+Precision = 0.900849858357
+False Discovery Rate = 0.0991501416431
+F1 Score = 0.840158520476
+#############
+
+
+
+True positive = 75
+True negative = 3996
+False positive = 15
+False positive = 13
+
+
+Result on test data:
+#############
+Accuracy = 0.993169065626
+True Positive Rate = 0.852272727273
+True Negative Rate = 0.996260284218
+Precision = 0.833333333333
+False Discovery Rate = 0.166666666667
+F1 Score = 0.842696629213
+#############
+
+
+Credit Adaboost 10:
+
+True positive = 333
+True negative = 15940
+False positive = 36
+False positive = 84
+
+
+Result on training data:
+#############
+Accuracy = 0.992679802355
+True Positive Rate = 0.798561151079
+True Negative Rate = 0.99774661993
+Precision = 0.90243902439
+False Discovery Rate = 0.0975609756098
+F1 Score = 0.847328244275
+#############
+
+
+
+True positive = 60
+True negative = 4010
+False positive = 14
+False positive = 15
+
+
+Result on test data:
+#############
+Accuracy = 0.992925103684
+True Positive Rate = 0.8
+True Negative Rate = 0.996520874751
+Precision = 0.810810810811
+False Discovery Rate = 0.189189189189
+F1 Score = 0.805369127517
+#############
+
+
+Credit Adaboost 15:
+
+True positive = 323
+True negative = 15961
+False positive = 24
+False positive = 85
+
+
+Result on training data:
+#############
+Accuracy = 0.993350820472
+True Positive Rate = 0.791666666667
+True Negative Rate = 0.99849859243
+Precision = 0.93083573487
+False Discovery Rate = 0.0691642651297
+F1 Score = 0.855629139073
+#############
+
+
+
+True positive = 70
+True negative = 4011
+False positive = 4
+False positive = 14
+
+
+Result on test data:
+#############
+Accuracy = 0.995608685045
+True Positive Rate = 0.833333333333
+True Negative Rate = 0.99900373599
+Precision = 0.945945945946
+False Discovery Rate = 0.0540540540541
+F1 Score = 0.886075949367
+#############
+
+
+Credit Adaboost 20:
+
+True positive = 324
+True negative = 15967
+False positive = 30
+False positive = 72
+
+
+Result on training data:
+#############
+Accuracy = 0.993777832001
+True Positive Rate = 0.818181818182
+True Negative Rate = 0.998124648372
+Precision = 0.915254237288
+False Discovery Rate = 0.0847457627119
+F1 Score = 0.864
+#############
+
+
+
+True positive = 69
+True negative = 3994
+False positive = 9
+False positive = 27
+
+
+Result on test data:
+#############
+Accuracy = 0.99121737009
+True Positive Rate = 0.71875
+True Negative Rate = 0.997751686235
+Precision = 0.884615384615
+False Discovery Rate = 0.115384615385
+F1 Score = 0.793103448276
+#############
