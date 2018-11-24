@@ -1,7 +1,7 @@
 import pandas as pd
 import math
 import numpy as np
-
+import random
 
 class Node:
     def __init__(self, attribute_no=None, attribute_values=None, child_nodes=None, decision=None):
@@ -98,7 +98,7 @@ class DecisionTree:
                 current_attribute = attributes[current_node.attribute_no]
                 branch = np.where(current_node.attribute_values == current_attribute)
                 if len(branch[0]) == 0:
-                    return 0
+                    return random.randint(0, 1)
                 current_node = current_node.child_nodes[branch[0][0]]
             else:
                 return current_node.decision
