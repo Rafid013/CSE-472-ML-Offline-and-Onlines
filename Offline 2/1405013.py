@@ -33,7 +33,7 @@ def initialize_params(k, d):
     means_list = []
     weights = k*[1.0/k]
     covariance_mats = []
-    random.seed(3)
+    random.seed(1)
     for i in range(k):
         temp_m = []
         for j in range(d):
@@ -162,6 +162,13 @@ def main():
     d_vector = np.matrix(data).transpose()
     reduced_sample = (transform_matrix*d_vector).transpose()
 
+    fig, ax = plt.subplots(figsize=(5, 3))
+    plt.scatter(reduced_sample[:, 0].flatten().tolist()[0],
+                reduced_sample[:, 1].flatten().tolist()[0])
+    ax.set_title('Data Plot')
+    fig.tight_layout()
+    plt.show()
+
     means_list, weights, covariance_mats, p_list = EM(3, reduced_sample)
     for i in range(3):
         print(means_list[i].tolist()[0])
@@ -183,15 +190,15 @@ def main():
     blue_points = reduced_sample[blue_points_idx, :]
     green_points = reduced_sample[green_points_idx, :]
 
-    fig, ax = plt.subplots(figsize=(5, 3))
+    fig1, ax1 = plt.subplots(figsize=(5, 3))
     plt.scatter(red_points[:, 0].flatten().tolist()[0],
                 red_points[:, 1].flatten().tolist()[0])
     plt.scatter(blue_points[:, 0].flatten().tolist()[0],
                 blue_points[:, 1].flatten().tolist()[0])
     plt.scatter(green_points[:, 0].flatten().tolist()[0],
                 green_points[:, 1].flatten().tolist()[0])
-    ax.set_title('Data Plot')
-    fig.tight_layout()
+    ax1.set_title('Colored Data Plot')
+    fig1.tight_layout()
     plt.show()
 
 
