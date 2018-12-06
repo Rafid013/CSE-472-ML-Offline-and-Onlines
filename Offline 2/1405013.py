@@ -44,8 +44,15 @@ def Nk(x, means, covariance_mat):
     d = x.shape[1]
     temp1 = math.sqrt(math.pow(2*math.pi, d)*math.fabs(np.linalg.det(covariance_mat)))
     temp2 = np.matrix(x) - np.matrix(means)
-    temp3 = math.exp(-0.5*temp2*np.linalg.inv(covariance_mat)*temp2.transpose())
-    result = temp3/temp1
+    temp3 = -0.5 * temp2 * np.linalg.inv(covariance_mat) * temp2.transpose()
+    try:
+        temp4 = math.exp(temp3)
+    except OverflowError:
+        if temp3 > 0:
+            temp4 = 1
+        else:
+            temp4 = 0
+    result = temp4/temp1
     return result
 
 
