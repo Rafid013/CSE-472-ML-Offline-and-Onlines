@@ -4,6 +4,17 @@ import random
 import math
 
 
+def normalize(arr):
+    size = len(arr)
+    tmp = 0
+    ret_arr = arr[:]
+    for i in range(size):
+        tmp += arr[i]
+    for i in range(size):
+        ret_arr[i] /= tmp
+    return ret_arr
+
+
 def construct_covariance_matrix(data):
     means = np.mean(data, axis=0)
     n = data.shape[0]
@@ -20,15 +31,14 @@ def construct_covariance_matrix(data):
 
 def initialize_params(k, d):
     means_list = []
-    weights = []
+    weights = k*[1.0/k]
     covariance_mats = []
+    random.seed(3)
     for i in range(k):
         temp_m = []
         for j in range(d):
             temp_m.append(random.uniform(0, 1))
         means_list.append(np.matrix(temp_m))
-
-        weights.append(random.uniform(0, 1))
 
         temp1 = []
         for j1 in range(d):
@@ -37,6 +47,7 @@ def initialize_params(k, d):
                 temp2.append(random.uniform(0, 1))
             temp1.append(temp2)
         covariance_mats.append(np.matrix(temp1))
+
     return means_list, weights, covariance_mats
 
 
@@ -45,13 +56,7 @@ def Nk(x, means, covariance_mat):
     temp1 = math.sqrt(math.pow(2*math.pi, d)*math.fabs(np.linalg.det(covariance_mat)))
     temp2 = np.matrix(x) - np.matrix(means)
     temp3 = -0.5 * temp2 * np.linalg.inv(covariance_mat) * temp2.transpose()
-    try:
-        temp4 = math.exp(temp3)
-    except OverflowError:
-        if temp3 > 0:
-            temp4 = 1
-        else:
-            temp4 = 0
+    temp4 = math.exp(temp3)
     result = temp4/temp1
     return result
 
@@ -73,32 +78,31 @@ def E_step(data, means_list, weights, covariance_mats):
     n = data.shape[0]
     k = len(weights)
 
-    p_list = n*[k*[0]]
-
+    p_list = []
     for i in range(n):
         xi = data[i]
         denominator = 0
         for j in range(k):
             denominator += (weights[j]*Nk(xi, means_list[j], covariance_mats[j]))
-
+        temp = []
         for j in range(k):
             numerator = weights[j]*Nk(xi, means_list[j], covariance_mats[j])
-            p_list[i][j] = numerator/denominator
-
+            temp.append(numerator/denominator)
+        p_list.append(temp)
     return p_list
 
 
 def M_step(data, p_list, k):
     n = data.shape[0]
-    d = data.shape[1]
 
     means_list = []
     covariance_mats = []
     weights = []
     for j in range(k):
-        numerator1 = np.matrix(d*[0])
-        denominator = 0
-        for i in range(n):
+        xi = np.matrix(data[0])
+        numerator1 = p_list[0][j]*xi
+        denominator = p_list[0][j]
+        for i in range(1, n):
             xi = np.matrix(data[i])
             numerator1 = numerator1 + (p_list[i][j]*xi)
             denominator += p_list[i][j]
@@ -108,9 +112,10 @@ def M_step(data, p_list, k):
 
     for j in range(k):
         means = means_list[j]
-        numerator2 = np.matrix(d * [d * [0]])
+        xi = np.matrix(data[0])
+        numerator2 = p_list[0][j]*((xi - means).transpose())*(xi - means)
         denominator = 0
-        for i in range(n):
+        for i in range(1, n):
             xi = np.matrix(data[i])
             numerator2 = numerator2 + (p_list[i][j]*((xi - means).transpose())*(xi - means))
             denominator += p_list[i][j]
@@ -118,6 +123,8 @@ def M_step(data, p_list, k):
         covariance_mats.append(covariance_mat)
 
         weights.append(denominator/n)
+
+    weights = normalize(weights)
 
     return means_list, weights, covariance_mats
 
@@ -128,14 +135,17 @@ def EM(k, data):
 
     log_likelihood_ = log_likelihood(data, means_list, weights, covariance_mats)
 
+    iteration = 1
     while True:
+        print('Iteration ' + str(iteration))
         p_list = E_step(data, means_list, weights, covariance_mats)
         means_list, weights, covariance_mats = M_step(data, p_list, k)
         log_likelihood_now = log_likelihood(data, means_list, weights, covariance_mats)
-        if math.fabs(log_likelihood_now - log_likelihood_) <= 0.01:
+        if math.fabs(log_likelihood_now - log_likelihood_) <= 1e-10:
             break
         log_likelihood_ = log_likelihood_now
-    return means_list, weights, covariance_mats
+        iteration += 1
+    return means_list, weights, covariance_mats, p_list
 
 
 def main():
@@ -152,17 +162,37 @@ def main():
     d_vector = np.matrix(data).transpose()
     reduced_sample = (transform_matrix*d_vector).transpose()
 
+    means_list, weights, covariance_mats, p_list = EM(3, reduced_sample)
+    for i in range(3):
+        print(means_list[i].tolist()[0])
+    print(weights)
+
+    red_points_idx = []
+    blue_points_idx = []
+    green_points_idx = []
+    for i in range(data.shape[0]):
+        j = p_list[i].index(max(p_list[i]))
+        if j == 0:
+            red_points_idx.append(i)
+        elif j == 1:
+            blue_points_idx.append(i)
+        else:
+            green_points_idx.append(i)
+
+    red_points = reduced_sample[red_points_idx, :]
+    blue_points = reduced_sample[blue_points_idx, :]
+    green_points = reduced_sample[green_points_idx, :]
+
     fig, ax = plt.subplots(figsize=(5, 3))
-    plt.scatter(reduced_sample[:, 0].flatten().tolist()[0],
-                reduced_sample[:, 1].flatten().tolist()[0])
+    plt.scatter(red_points[:, 0].flatten().tolist()[0],
+                red_points[:, 1].flatten().tolist()[0])
+    plt.scatter(blue_points[:, 0].flatten().tolist()[0],
+                blue_points[:, 1].flatten().tolist()[0])
+    plt.scatter(green_points[:, 0].flatten().tolist()[0],
+                green_points[:, 1].flatten().tolist()[0])
     ax.set_title('Data Plot')
     fig.tight_layout()
     plt.show()
-
-    means_list, weights, covariance_mats = EM(3, reduced_sample)
-    print(means_list)
-    print(weights)
-    print(covariance_mats)
 
 
 if __name__ == '__main__':
