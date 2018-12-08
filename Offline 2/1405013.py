@@ -162,7 +162,7 @@ def main():
     d_vector = np.matrix(data).transpose()
     reduced_sample = (transform_matrix*d_vector).transpose()
 
-    fig, ax = plt.subplots(figsize=(5, 3))
+    fig, ax = plt.subplots(figsize=(8, 6))
     plt.scatter(reduced_sample[:, 0].flatten().tolist()[0],
                 reduced_sample[:, 1].flatten().tolist()[0])
     ax.set_title('Data Plot')
@@ -190,7 +190,7 @@ def main():
     blue_points = reduced_sample[blue_points_idx, :]
     green_points = reduced_sample[green_points_idx, :]
 
-    fig1, ax1 = plt.subplots(figsize=(5, 3))
+    fig1, ax1 = plt.subplots(figsize=(8, 6))
     plt.scatter(red_points[:, 0].flatten().tolist()[0],
                 red_points[:, 1].flatten().tolist()[0])
     plt.scatter(blue_points[:, 0].flatten().tolist()[0],
