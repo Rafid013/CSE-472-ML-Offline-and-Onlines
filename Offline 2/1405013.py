@@ -141,15 +141,16 @@ def EM(k, data):
         p_list = E_step(data, means_list, weights, covariance_mats)
         means_list, weights, covariance_mats = M_step(data, p_list, k)
         log_likelihood_now = log_likelihood(data, means_list, weights, covariance_mats)
-        if math.fabs(log_likelihood_now - log_likelihood_) <= 1e-10:
+        if math.fabs(log_likelihood_now - log_likelihood_) <= 1e-4:
             break
         log_likelihood_ = log_likelihood_now
+        print(log_likelihood_)
         iteration += 1
     return means_list, weights, covariance_mats, p_list
 
 
 def main():
-    data = np.genfromtxt('data.txt', delimiter='\t')
+    data = np.genfromtxt('online_data.txt', delimiter='\t')
 
     covariance_matrix = construct_covariance_matrix(data)
 
@@ -169,26 +170,38 @@ def main():
     fig.tight_layout()
     plt.show()
 
-    means_list, weights, covariance_mats, p_list = EM(3, reduced_sample)
-    for i in range(3):
+    means_list, weights, covariance_mats, p_list = EM(4, reduced_sample)
+    for i in range(4):
         print(means_list[i].tolist()[0])
     print(weights)
+
+    soft_counts = []
+    for j in range(4):
+        temp = 0
+        for i in range(data.shape[0]):
+            temp += p_list[i][j]
+        soft_counts.append(temp)
+    print(soft_counts)
 
     red_points_idx = []
     blue_points_idx = []
     green_points_idx = []
+    orange_points_idx = []
     for i in range(data.shape[0]):
         j = p_list[i].index(max(p_list[i]))
         if j == 0:
             red_points_idx.append(i)
         elif j == 1:
             blue_points_idx.append(i)
-        else:
+        elif j == 2:
             green_points_idx.append(i)
+        else:
+            orange_points_idx.append(i)
 
     red_points = reduced_sample[red_points_idx, :]
     blue_points = reduced_sample[blue_points_idx, :]
     green_points = reduced_sample[green_points_idx, :]
+    orange_points = reduced_sample[orange_points_idx, :]
 
     fig1, ax1 = plt.subplots(figsize=(8, 6))
     plt.scatter(red_points[:, 0].flatten().tolist()[0],
@@ -197,6 +210,8 @@ def main():
                 blue_points[:, 1].flatten().tolist()[0])
     plt.scatter(green_points[:, 0].flatten().tolist()[0],
                 green_points[:, 1].flatten().tolist()[0])
+    plt.scatter(orange_points[:, 0].flatten().tolist()[0],
+                orange_points[:, 1].flatten().tolist()[0])
     ax1.set_title('Colored Data Plot')
     fig1.tight_layout()
     plt.show()
