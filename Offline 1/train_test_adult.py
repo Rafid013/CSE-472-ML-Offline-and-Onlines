@@ -11,20 +11,20 @@ import adaboost
 prepro = 0
 if prepro == 1:
     start_preprocessing = time.time()
-    print 'Preprocessing started...'
+    print('Preprocessing started...')
     df_adult_train = pd.read_csv('adult_data.csv', delimiter=',', header=None, na_values=' ?')
     df_adult_train = ap.process_missing_label(df_adult_train)
     df_adult_train = ap.process_missing_attribute(df_adult_train, [1, 3, 5, 6, 7, 8, 9, 13])
-    print 'Missing values handled'
+    print('Missing values handled')
     df_adult_train = ap.process_string_to_int(df_adult_train, [1, 3, 5, 6, 7, 8, 9, 13, 14])
-    print 'String converted to integer labels'
+    print('String converted to integer labels')
     df_adult_train, binarizers_adult, binarizers_adult_columns = ap.binarize(df_adult_train, [0, 2, 4, 10, 11, 12])
-    print 'Continuous values binarized'
+    print('Continuous values binarized')
     df_adult_train = df_adult_train.reset_index(drop=True)
     df_adult_train.to_csv('Preprocessed_Adult_Train.csv', sep=',')
     end_preprocessing = time.time()
-    
-    print "Preprocessing training data took " + str(float(end_preprocessing - start_preprocessing)/60) + " min"
+
+    print("Preprocessing training data took " + str(float(end_preprocessing - start_preprocessing) / 60) + " min")
 
     start_preprocessing = time.time()
     df_adult_test = pd.read_csv('adult_test.csv', delimiter=',', header=None, na_values=' ?')
@@ -36,7 +36,7 @@ if prepro == 1:
     df_adult_test.to_csv('Preprocessed_Adult_Test.csv', sep=',')
     end_preprocessing = time.time()
 
-    print "Preprocessing on test data took " + str(float(end_preprocessing - start_preprocessing) / 60) + " min"
+    print("Preprocessing on test data took " + str(float(end_preprocessing - start_preprocessing) / 60) + " min")
 else:
     df_adult_train = pd.read_csv('Preprocessed_Adult_Train.csv', delimiter=',', header=None)
     df_adult_test = pd.read_csv('Preprocessed_Adult_Test.csv', delimiter=',', header=None)
@@ -50,20 +50,19 @@ dt = adaboost.AdaBoost(df_adult_train, decision_tree.DecisionTree, 20)
 dt.train()
 end_training = time.time()
 
-print "Training took " + str(float(end_training - start_training)/60) + " min"
-print
-print
-
+print("Training took " + str(float(end_training - start_training) / 60) + " min")
+print()
+print()
 results = []
 for smpl in range(0, df_adult_train.shape[0]):
     results.append(dt.decide(df_adult_train.iloc[smpl, :df_adult_train.shape[1] - 1].tolist()))
 
 tn, fp, fn, tp = metrics.confusion_matrix(df_adult_train.iloc[:, df_adult_train.shape[1] - 1].tolist(), results).ravel()
 
-print 'True positive = ' + str(tp)
-print 'True negative = ' + str(tn)
-print 'False positive = ' + str(fp)
-print 'False positive = ' + str(fn)
+print('True positive = ' + str(tp))
+print('True negative = ' + str(tn))
+print('False positive = ' + str(fp))
+print('False positive = ' + str(fn))
 
 total = tn + fp + fn + tp
 
@@ -91,33 +90,30 @@ if tpr != 'undefined' and prc != 'undefined':
 else:
     f1s = 'undefined'
 
-
-print
-print
-print "Result on training data:"
-print "#############"
-print 'Accuracy = ' + str(acc)
-print 'True Positive Rate = ' + str(tpr)
-print 'True Negative Rate = ' + str(tnr)
-print 'Precision = ' + str(prc)
-print 'False Discovery Rate = ' + str(fdr)
-print 'F1 Score = ' + str(f1s)
-print "#############"
-print
-print
-print
-
-
+print()
+print()
+print("Result on training data:")
+print("#############")
+print('Accuracy = ' + str(acc))
+print('True Positive Rate = ' + str(tpr))
+print('True Negative Rate = ' + str(tnr))
+print('Precision = ' + str(prc))
+print('False Discovery Rate = ' + str(fdr))
+print('F1 Score = ' + str(f1s))
+print("#############")
+print()
+print()
+print()
 results = []
 for smpl in range(0, df_adult_test.shape[0]):
     results.append(dt.decide(df_adult_test.iloc[smpl, :df_adult_test.shape[1] - 1].tolist()))
 
 tn, fp, fn, tp = metrics.confusion_matrix(df_adult_test.iloc[:, df_adult_test.shape[1] - 1].tolist(), results).ravel()
 
-print 'True positive = ' + str(tp)
-print 'True negative = ' + str(tn)
-print 'False positive = ' + str(fp)
-print 'False positive = ' + str(fn)
+print('True positive = ' + str(tp))
+print('True negative = ' + str(tn))
+print('False positive = ' + str(fp))
+print('False positive = ' + str(fn))
 
 total = tn + fp + fn + tp
 
@@ -145,18 +141,17 @@ if tpr != 'undefined' and prc != 'undefined':
 else:
     f1s = 'undefined'
 
-
-print
-print
-print "Result on test data:"
-print "#############"
-print 'Accuracy = ' + str(acc)
-print 'True Positive Rate = ' + str(tpr)
-print 'True Negative Rate = ' + str(tnr)
-print 'Precision = ' + str(prc)
-print 'False Discovery Rate = ' + str(fdr)
-print 'F1 Score = ' + str(f1s)
-print "#############"
-print
-print
-print
+print()
+print()
+print("Result on test data:")
+print("#############")
+print('Accuracy = ' + str(acc))
+print('True Positive Rate = ' + str(tpr))
+print('True Negative Rate = ' + str(tnr))
+print('Precision = ' + str(prc))
+print('False Discovery Rate = ' + str(fdr))
+print('F1 Score = ' + str(f1s))
+print("#############")
+print()
+print()
+print()

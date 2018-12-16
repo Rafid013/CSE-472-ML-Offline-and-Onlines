@@ -3,6 +3,7 @@ import math
 import numpy as np
 import random
 
+
 class Node:
     def __init__(self, attribute_no=None, attribute_values=None, child_nodes=None, decision=None):
         self.attribute_no = attribute_no

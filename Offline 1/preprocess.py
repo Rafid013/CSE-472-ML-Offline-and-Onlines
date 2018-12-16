@@ -22,7 +22,7 @@ def process_missing_label(dataframe):
     for j in range(0, df.shape[0]):
         if temp.iloc[j] is True:
             rows_to_be_dropped.append(j)
-            print 'Row ' + str(j) + ' dropped'
+            print('Row ' + str(j) + ' dropped')
     df.drop(rows_to_be_dropped)
     df.reset_index(drop=True)
     return df
@@ -42,7 +42,7 @@ def binarize(dataframe, indices):
     binarizers = []
     binarizer_columns = []
     for i in indices:
-        print 'Binarizing column ' + str(i)
+        print('Binarizing column ' + str(i))
         df = df.sort_values(by=[i], axis=0, kind='mergesort')
         unique_values = df.iloc[:, i].unique()
         mid_points = [unique_values[0] - 5]
