@@ -107,5 +107,5 @@ class Recommender:
                     denominator += 1
                     numerator += (test_data[n, m] - res_matrix[n, m])**2
 
-        rmse = math.sqrt(numerator/denominator)
-        return rmse
+        RMSE = math.sqrt(numerator/denominator)
+        return RMSE
