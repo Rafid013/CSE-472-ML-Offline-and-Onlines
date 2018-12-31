@@ -1,8 +1,6 @@
 import numpy as np
 import random as rand
 import math
-from multiprocessing import Process
-import pickle as pkl
 
 
 class Recommender:
@@ -13,43 +11,6 @@ class Recommender:
         self.u_T = []
         self.v = []
         self.threshold = threshold
-
-    def update_v(self, N, m, data, u_T):
-        temp1 = np.matrix(np.zeros((self.K, self.K), dtype=np.float32))
-        temp2 = np.matrix(np.zeros((self.K, 1), dtype=np.float32))
-        for n in range(N):
-            if data[n, m] != 99:
-                u_n_T = u_T[n]
-                u_n = u_n_T.transpose()
-
-                temp1 = temp1 + u_n * u_n_T
-                temp2 = temp2 + data[n, m] * u_n
-
-        I_k = np.matrix(np.identity(self.K, dtype=np.float32))
-        temp3 = np.linalg.inv(temp1 + self.lambda_v * I_k)
-        v_m = temp3 * temp2
-        f = open(file='TEMP/v' + str(m) + '.pkl', mode='wb')
-        pkl.dump(v_m, f)
-        f.close()
-
-    def update_u_T(self, M, n, data, v):
-        temp1 = np.matrix(np.zeros((self.K, self.K), dtype=np.float32))
-        temp2 = np.matrix(np.zeros((self.K, 1), dtype=np.float32))
-        for m in range(M):
-            if data[n, m] != 99:
-                v_m = v[:, m]
-                v_m_T = v_m.transpose()
-
-                temp1 = temp1 + v_m * v_m_T
-                temp2 = temp2 + data[n, m] * v_m
-
-        I_k = np.matrix(np.identity(self.K, dtype=np.float32))
-        temp3 = np.linalg.inv(temp1 + self.lambda_u * I_k)
-        u_n = temp3 * temp2
-        u_n_T = u_n.transpose()
-        f = open(file='TEMP/u' + str(n) + '.pkl', mode='wb')
-        pkl.dump(u_n_T, f)
-        f.close()
 
     def train(self, data):
         u_T = self.u_T
@@ -80,34 +41,38 @@ class Recommender:
             print("Iteration = " + str(iteration))
 
             print("Updating Vm vectors")
-            processes = []
             for m in range(M):
-                p = Process(target=self.update_v, args=(N, m, data, u_T))
-                processes.append(p)
-                p.start()
+                temp1 = np.matrix(np.zeros((self.K, self.K), dtype=np.float32))
+                temp2 = np.matrix(np.zeros((self.K, 1), dtype=np.float32))
+                for n in range(N):
+                    if data[n, m] != 99:
+                        u_n_T = u_T[n]
+                        u_n = u_n_T.transpose()
 
-            for m in range(M):
-                processes[m].join()
+                        temp1 = temp1 + u_n * u_n_T
+                        temp2 = temp2 + data[n, m] * u_n
 
-            for m in range(M):
-                f = open(file='TEMP/v' + str(m) + '.pkl', mode='rb')
-                vm = pkl.load(f)
-                f.close()
-                v[:, m] = vm
+                I_k = np.matrix(np.identity(self.K, dtype=np.float32))
+                temp3 = np.linalg.inv(temp1 + self.lambda_v * I_k)
+                v_m = temp3 * temp2
+                v[:, m] = v_m
 
             print("Updating Un_T vectors")
-            processes = []
             for n in range(N):
-                p = Process(target=self.update_u_T, args=(M, n, data, v))
-                processes.append(p)
-                p.start()
+                temp1 = np.matrix(np.zeros((self.K, self.K), dtype=np.float32))
+                temp2 = np.matrix(np.zeros((self.K, 1), dtype=np.float32))
+                for m in range(M):
+                    if data[n, m] != 99:
+                        v_m = v[:, m]
+                        v_m_T = v_m.transpose()
 
-            for n in range(N):
-                processes[n].join()
+                        temp1 = temp1 + v_m * v_m_T
+                        temp2 = temp2 + data[n, m] * v_m
 
-            for n in range(N):
-                f = open(file='TEMP/u' + str(n) + '.pkl', mode='rb')
-                u_n_T = pkl.load(f)
+                I_k = np.matrix(np.identity(self.K, dtype=np.float32))
+                temp3 = np.linalg.inv(temp1 + self.lambda_u * I_k)
+                u_n = temp3 * temp2
+                u_n_T = u_n.transpose()
                 u_T[n] = u_n_T
 
             L_temp1 = L_temp2 = L_temp3 = 0
