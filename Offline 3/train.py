@@ -11,9 +11,6 @@ if __name__ == '__main__':
     train_data = pkl.load(file1)
     valid_data = pkl.load(file2)
 
-    train_data = train_data.astype(np.float32)
-    valid_data = valid_data.astype(np.float32)
-
     lambda_u_list = [0.01, 0.1, 1.0, 10.0]
     lambda_v_list = [0.01, 0.1, 1.0, 10.0]
     K_list = [5, 10, 20, 40]

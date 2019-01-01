@@ -26,7 +26,7 @@ class Recommender:
                 temp.append(rand.uniform(-1, 1))
             u_T.append(temp)
 
-        u_T = np.matrix(u_T).astype(np.float32)
+        u_T = np.matrix(u_T)
 
         for i in range(M):
             temp = []
@@ -34,9 +34,9 @@ class Recommender:
                 temp.append(rand.uniform(-1, 1))
             v.append(temp)
 
-        v = np.matrix(v).transpose().astype(np.float32)
+        v = np.matrix(v).transpose()
 
-        prev_L_reg = -100
+        prev_RMSE = -100
 
         iteration = 1
 
@@ -81,7 +81,9 @@ class Recommender:
                 for k in range(self.K):
                     v[k, m] = v_m[k, 0]
             self.v = v
+
             print("Updating Un_T vectors")
+
             for n in range(N):
                 temp1 = np.matrix(np.zeros((self.K, self.K), dtype=np.float32))
                 temp2 = np.matrix(np.zeros((self.K, 1), dtype=np.float32))
@@ -99,31 +101,22 @@ class Recommender:
                 u_n_T = u_n.transpose()
                 u_T[n] = u_n_T
             self.u_T = u_T
-            L_temp1 = L_temp2 = L_temp3 = 0
 
-            print("Calculating empirical risk")
-            for n in range(N):
-                u_n_T = u_T[n]
-                u_n = u_n_T.transpose()
-                L_temp2 += self.lambda_u*(np.linalg.norm(u_n)**2)
-
-            for m in range(M):
-                v_m = v[:, m]
-                L_temp3 += self.lambda_v*(np.linalg.norm(v_m)**2)
-
+            print("Calculating RMSE")
+            res_matrix = np.matrix(self.u_T) * np.matrix(self.v)
+            L_emp = 0
+            denominator = 0
             for n in range(N):
                 for m in range(M):
-                    u_n_T = u_T[n]
-                    v_m = v[:, m]
                     if data[n, m] != 99:
-                        L_temp1 += (data[n, m] - f4(u_n_T, v_m))**2
-
-            L_reg = L_temp1 + L_temp2 + L_temp3
-            print("Empirical Risk = " + str(L_reg[0, 0]))
-            if prev_L_reg != -100:
-                if math.fabs(L_reg[0, 0] - prev_L_reg) <= self.threshold:
+                        L_emp += (data[n, m] - res_matrix[n, m]) ** 2
+                        denominator += 1
+            RMSE = math.sqrt(L_emp/denominator)
+            print("RMSE = " + str(RMSE))
+            if prev_RMSE != -100:
+                if math.fabs(RMSE - prev_RMSE) <= self.threshold:
                     break
-            prev_L_reg = L_reg[0, 0]
+            prev_RMSE = RMSE
             iteration += 1
 
     def test(self, test_data):
