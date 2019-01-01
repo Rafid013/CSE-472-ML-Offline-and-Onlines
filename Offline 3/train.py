@@ -22,22 +22,22 @@ if __name__ == '__main__':
     min_lambda_u = min_lambda_v = min_K = 0
 
     iteration = 1
-    for lambda_u in lambda_u_list:
-        for lambda_v in lambda_v_list:
-            for K in K_list:
-                print("lambda_u = " + str(lambda_u))
-                print("lambda_v = " + str(lambda_v))
-                print("K = " + str(K))
+    # for lambda_u in lambda_u_list:
+    for lambda_v in lambda_v_list:
+        for K in K_list:
+            print("lambda_u = " + str(lambda_v))
+            print("lambda_v = " + str(lambda_v))
+            print("K = " + str(K))
 
-                rec = Recommender(lambda_u, lambda_v, K, 0.001)
-                rec.train(train_data[:10, 1:])
+            rec = Recommender(lambda_v, lambda_v, K, 0.001)
+            rec.train(train_data[:10000, 1:])
 
-                RMSE = rec.test(valid_data[:10, 1:])
-                print(RMSE)
-                if RMSE < min_RMSE:
-                    min_RMSE = RMSE
-                    min_lambda_u = lambda_u
-                    min_lambda_v = lambda_v
-                    min_K = K
+            RMSE = rec.test(valid_data[:10000, 1:])
+            print(RMSE)
+            if RMSE < min_RMSE:
+                min_RMSE = RMSE
+                min_lambda_u = lambda_v
+                min_lambda_v = lambda_v
+                min_K = K
 
     print("RMSE minimum for " + str((min_lambda_u, min_lambda_v, min_K)))
