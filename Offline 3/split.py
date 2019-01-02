@@ -64,3 +64,7 @@ if __name__ == '__main__':
     pkl.dump(train_data, file1)
     pkl.dump(valid_data, file2)
     pkl.dump(test_data, file3)
+
+    file1.close()
+    file2.close()
+    file3.close()

@@ -114,7 +114,7 @@ class Recommender:
             RMSE = math.sqrt(L_emp/denominator)
             print("RMSE = " + str(RMSE))
             if prev_RMSE != -100:
-                if math.fabs(RMSE - prev_RMSE) <= self.threshold:
+                if RMSE > prev_RMSE or math.fabs(RMSE - prev_RMSE) <= self.threshold:
                     break
             prev_RMSE = RMSE
             iteration += 1

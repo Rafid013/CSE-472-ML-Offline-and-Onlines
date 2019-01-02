@@ -1,15 +1,19 @@
 import pickle as pkl
 from recommender import Recommender
 import math
-import numpy as np
 
 
 if __name__ == '__main__':
     file1 = open('train_data.pkl', 'rb')
     file2 = open('valid_data.pkl', 'rb')
 
+    out_file = open('out.txt', 'w')
+
     train_data = pkl.load(file1)
     valid_data = pkl.load(file2)
+
+    file1.close()
+    file2.close()
 
     lambda_u_list = [0.01, 0.1, 1.0, 10.0]
     lambda_v_list = [0.01, 0.1, 1.0, 10.0]
@@ -17,6 +21,7 @@ if __name__ == '__main__':
 
     min_RMSE = math.inf
     min_lambda_u = min_lambda_v = min_K = 0
+    threshold = 0.0001
 
     iteration = 1
     # for lambda_u in lambda_u_list:
@@ -26,11 +31,14 @@ if __name__ == '__main__':
             print("lambda_v = " + str(lambda_v))
             print("K = " + str(K))
 
-            rec = Recommender(lambda_v, lambda_v, K, 0.001)
-            rec.train(train_data[:10000, 1:])
+            rec = Recommender(lambda_v, lambda_v, K, threshold)
+            rec.train(train_data[:, 1:])
 
-            RMSE = rec.test(valid_data[:10000, 1:])
-            print(RMSE)
+            RMSE = rec.test(valid_data[:, 1:])
+
+            out_file.write("Lambda = " + str(lambda_v) + ", K = " + str(K) + ", RMSE = " + str(RMSE) + "\n")
+            out_file.flush()
+
             if RMSE < min_RMSE:
                 min_RMSE = RMSE
                 min_lambda_u = lambda_v
@@ -38,3 +46,17 @@ if __name__ == '__main__':
                 min_K = K
 
     print("RMSE minimum for " + str((min_lambda_u, min_lambda_v, min_K)))
+
+    out_file.close()
+
+    for i in range(train_data.shape[0]):
+        train_data[i, 0] += valid_data[i, 0]
+        for j in range(1, train_data.shape[1]):
+            if valid_data[i, j] != 99:
+                train_data[i, j] = valid_data[i, j]
+
+    rec = Recommender(min_lambda_u, min_lambda_v, min_K, threshold)
+    rec.train(train_data[:, 1:])
+    model_file = open('trained_model.pkl', 'wb')
+    pkl.dump(rec, model_file)
+    model_file.close()
