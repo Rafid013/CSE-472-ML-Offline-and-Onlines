@@ -4,6 +4,7 @@ import math
 import theano
 import theano.tensor as T
 from theano.tensor.nlinalg import matrix_inverse
+from collections import defaultdict
 
 
 class Recommender:
@@ -20,7 +21,18 @@ class Recommender:
         v = self.v
         N = data.shape[0]
         M = data.shape[1]
-        for i in range(N):
+
+        available_index_rowwise = defaultdict(list)
+        available_index_colwise = defaultdict(list)
+
+        for n in range(N):
+            available_index_rowwise[n] = []
+            for m in range(M):
+                if data[n, m] != 99:
+                    available_index_rowwise[n].append(m)
+                    available_index_colwise[m].append(n)
+
+        for n in range(N):
             temp = []
             for k in range(self.K):
                 temp.append(rand.uniform(-1, 1))
@@ -28,7 +40,7 @@ class Recommender:
 
         u_T = np.matrix(u_T)
 
-        for i in range(M):
+        for m in range(M):
             temp = []
             for k in range(self.K):
                 temp.append(rand.uniform(-1, 1))
@@ -67,13 +79,13 @@ class Recommender:
             for m in range(M):
                 temp1 = np.matrix(np.zeros((self.K, self.K), dtype=np.float32))
                 temp2 = np.matrix(np.zeros((self.K, 1), dtype=np.float32))
-                for n in range(N):
-                    if data[n, m] != 99:
-                        u_n_T = u_T[n]
-                        u_n = u_n_T.transpose()
+                available_index_col_m = available_index_colwise[m]
+                for n in available_index_col_m:
+                    u_n_T = u_T[n]
+                    u_n = u_n_T.transpose()
 
-                        temp1 = f1(temp1, u_n, u_n_T)
-                        temp2 = f2(temp2, data[n, m], u_n)
+                    temp1 = f1(temp1, u_n, u_n_T)
+                    temp2 = f2(temp2, data[n, m], u_n)
 
                 I_k = np.matrix(np.identity(self.K, dtype=np.float32))
                 temp3 = f3(temp1, self.lambda_v, I_k)
@@ -87,13 +99,13 @@ class Recommender:
             for n in range(N):
                 temp1 = np.matrix(np.zeros((self.K, self.K), dtype=np.float32))
                 temp2 = np.matrix(np.zeros((self.K, 1), dtype=np.float32))
-                for m in range(M):
-                    if data[n, m] != 99:
-                        v_m = v[:, m]
-                        v_m_T = v_m.transpose()
+                available_index_row_n = available_index_rowwise[n]
+                for m in available_index_row_n:
+                    v_m = v[:, m]
+                    v_m_T = v_m.transpose()
 
-                        temp1 = f1(temp1, v_m, v_m_T)
-                        temp2 = f2(temp2, data[n, m], v_m)
+                    temp1 = f1(temp1, v_m, v_m_T)
+                    temp2 = f2(temp2, data[n, m], v_m)
 
                 I_k = np.matrix(np.identity(self.K, dtype=np.float32))
                 temp3 = f3(temp1, self.lambda_u, I_k)
@@ -107,10 +119,10 @@ class Recommender:
             L_emp = 0
             denominator = 0
             for n in range(N):
-                for m in range(M):
-                    if data[n, m] != 99:
-                        L_emp += (data[n, m] - res_matrix[n, m]) ** 2
-                        denominator += 1
+                available_index_row_n = available_index_rowwise[n]
+                for m in available_index_row_n:
+                    L_emp += (data[n, m] - res_matrix[n, m]) ** 2
+                    denominator += 1
             RMSE = math.sqrt(L_emp/denominator)
             print("RMSE = " + str(RMSE))
             if prev_RMSE != -100:
