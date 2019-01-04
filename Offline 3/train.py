@@ -21,7 +21,7 @@ if __name__ == '__main__':
 
     min_RMSE = math.inf
     min_lambda_u = min_lambda_v = min_K = 0
-    threshold = 0.0001
+    threshold = 0.01
 
     iteration = 1
     # for lambda_u in lambda_u_list:
@@ -45,7 +45,7 @@ if __name__ == '__main__':
                 min_lambda_v = lambda_v
                 min_K = K
 
-    print("RMSE minimum for " + str((min_lambda_u, min_lambda_v, min_K)))
+    out_file.write("RMSE minimum for " + str((min_lambda_u, min_lambda_v, min_K)) + "\n")
 
     out_file.close()
 
