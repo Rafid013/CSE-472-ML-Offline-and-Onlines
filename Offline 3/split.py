@@ -51,15 +51,15 @@ def split(data):
 
 
 if __name__ == '__main__':
-    data_arr = np.genfromtxt(fname='data.csv', dtype=np.float32, delimiter=',')
+    data_arr = np.genfromtxt(fname='Online Data/test.csv', dtype=np.float32, delimiter=',')
     train_data, valid_data, test_data = split(data_arr)
     print(train_data)
     print(valid_data)
     print(test_data)
 
-    file1 = open('train_data.pkl', 'wb')
-    file2 = open('valid_data.pkl', 'wb')
-    file3 = open('test_data.pkl', 'wb')
+    file1 = open('Online Data/train_data_online.pkl', 'wb')
+    file2 = open('Online Data/valid_data_online.pkl', 'wb')
+    file3 = open('Online Data/test_data_online.pkl', 'wb')
 
     pkl.dump(train_data, file1)
     pkl.dump(valid_data, file2)
