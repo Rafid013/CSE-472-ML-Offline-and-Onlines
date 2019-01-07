@@ -20,7 +20,7 @@ if __name__ == '__main__':
     min_RMSE = math.inf
     min_lambda_u = min_lambda_v = 1
     min_K = 5
-    threshold = 0.01
+    threshold = 0.001
 
     for i in range(train_data.shape[0]):
         train_data[i, 0] += valid_data[i, 0]
