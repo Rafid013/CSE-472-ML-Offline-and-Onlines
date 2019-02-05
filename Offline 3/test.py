@@ -2,8 +2,8 @@ import pickle as pkl
 
 
 if __name__ == '__main__':
-    test_file = open('Online Data/test_data_online.pkl', 'rb')
-    model_file = open('Online Data/trained_model_online.pkl', 'rb')
+    test_file = open('test_data.pkl', 'rb')
+    model_file = open('trained_model.pkl', 'rb')
 
     test_data = pkl.load(test_file)
     rec = pkl.load(model_file)

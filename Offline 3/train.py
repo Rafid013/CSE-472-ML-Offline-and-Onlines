@@ -20,34 +20,35 @@ if __name__ == '__main__':
     K_list = [5, 10, 20, 40]
 
     min_RMSE = math.inf
-    min_lambda_u = min_lambda_v = min_K = 0
+    min_lambda_u = min_lambda_v = 1
+    min_K = 5
     threshold = 0.01
 
-    iteration = 1
+    # iteration = 1
     # for lambda_u in lambda_u_list:
-    for lambda_v in lambda_v_list:
-        for K in K_list:
-            print("lambda_u = " + str(lambda_v))
-            print("lambda_v = " + str(lambda_v))
-            print("K = " + str(K))
+    # for lambda_v in lambda_v_list:
+    #    for K in K_list:
+    #        print("lambda_u = " + str(lambda_v))
+    #        print("lambda_v = " + str(lambda_v))
+    #        print("K = " + str(K))
 
-            rec = Recommender(lambda_v, lambda_v, K, threshold)
-            rec.train(train_data[:, 1:])
+     #       rec = Recommender(lambda_v, lambda_v, K, threshold)
+     #       rec.train(train_data[:, 1:])
 
-            RMSE = rec.test(valid_data[:, 1:])
+      #      RMSE = rec.test(valid_data[:, 1:])
 
-            out_file.write("Lambda = " + str(lambda_v) + ", K = " + str(K) + ", RMSE = " + str(RMSE) + "\n")
-            out_file.flush()
+    #        out_file.write("Lambda = " + str(lambda_v) + ", K = " + str(K) + ", RMSE = " + str(RMSE) + "\n")
+     #       out_file.flush()
 
-            if RMSE < min_RMSE:
-                min_RMSE = RMSE
-                min_lambda_u = lambda_v
-                min_lambda_v = lambda_v
-                min_K = K
+      #      if RMSE < min_RMSE:
+       #         min_RMSE = RMSE
+        #        min_lambda_u = lambda_v
+         #       min_lambda_v = lambda_v
+          #      min_K = K
 
-    out_file.write("RMSE minimum for " + str((min_lambda_u, min_lambda_v, min_K)) + "\n")
+    # out_file.write("RMSE minimum for " + str((min_lambda_u, min_lambda_v, min_K)) + "\n")
 
-    out_file.close()
+    # out_file.close()
 
     for i in range(train_data.shape[0]):
         train_data[i, 0] += valid_data[i, 0]
